@@ -5,24 +5,26 @@ class StuffList extends Component {
   render() {
     return (
       <div>
-        <h2>STUFF</h2>
-        <p>Mauris sem velit, vehicula eget sodales vitae,
-        rhoncus eget sapien:</p>
-        <ol>
-          <li>Nulla pulvinar diam</li>
-          <li>Facilisis bibendum</li>
-          <li>Vestibulum vulputate</li>
-          <li>Eget erat</li>
-          <li>Id porttitor</li>
-        </ol>
-
         <Route path={`${this.props.match.url}/:id`} component={Stuff} />
         <Route exact path={this.props.match.url} render={() => (
+          <div>
+          <h2>STUFF</h2>
+          <p>Mauris sem velit, vehicula eget sodales vitae,
+          rhoncus eget sapien:</p>
+          <ol>
+            <li>Nulla pulvinar diam</li>
+            <li>Facilisis bibendum</li>
+            <li>Vestibulum vulputate</li>
+            <li>Eget erat</li>
+            <li>Id porttitor</li>
+          </ol>
+
           <ul>
-          {[1,2,3,4,5].map(value =>
+          {Array.from(new Array(20), (x,i) => i).map(value =>
             <li key={value}><NavLink exact to={`${this.props.match.url}/${value}`}>{value}</NavLink></li>
           )}
           </ul>
+          </div>
         )}/>
       </div>
     );
@@ -55,10 +57,9 @@ class Stuff extends Component {
   render() {
     return (
       <div>
-
         {this.state.pictures.map(pic =>
           <div key={pic.results}>
-            <img src={pic.picture.medium} />
+            <img alt="" src={pic.picture.medium} />
           </div>
         )}
 
