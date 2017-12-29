@@ -5,8 +5,8 @@ import {
   HashRouter
 } from "react-router-dom";
 import Home from "./Home";
-import Stuff from "./Stuff";
 import Contact from "./Contact";
+import StuffList from "./StuffList";
 
 class Main extends Component {
   render() {
@@ -21,7 +21,7 @@ class Main extends Component {
           </ul>
           <div className="content">
             <Route exact path="/" component={Home}/>
-            <Route path="/stuff/:id" render= { ({ match }) => <Stuff id={match.params.id} /> } />
+            <Route path="/stuff" component={StuffList} />
             <Route path="/contact" component={Contact}/>
           </div>
         </div>
