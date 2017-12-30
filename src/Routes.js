@@ -1,27 +1,21 @@
 import React, { Component } from "react"
 import { Route, NavLink } from "react-router-dom"
 
-class StuffList extends Component {
+class Routes extends Component {
   render() {
     return (
       <div>
-        <Route path={`${this.props.match.url}/:id`} component={Stuff} />
+        <Route path={`${this.props.match.url}/:id`} render={props => (
+            <SingleRoute {...props} key={this.props.match.id}  />
+        )} />
         <Route exact path={this.props.match.url} render={() => (
           <div>
-          <h2>STUFF</h2>
-          <p>Mauris sem velit, vehicula eget sodales vitae,
-          rhoncus eget sapien:</p>
-          <ol>
-            <li>Nulla pulvinar diam</li>
-            <li>Facilisis bibendum</li>
-            <li>Vestibulum vulputate</li>
-            <li>Eget erat</li>
-            <li>Id porttitor</li>
-          </ol>
-
+          <h2>Routes</h2>
           <ul>
           {Array.from(new Array(20), (x,i) => i).map(value =>
-            <li key={value}><NavLink exact to={`${this.props.match.url}/${value}`}>{value}</NavLink></li>
+            <li key={value}>
+              <NavLink exact to={`${this.props.match.url}/${value}`}>{value}</NavLink>
+            </li>
           )}
           </ul>
           </div>
@@ -31,7 +25,7 @@ class StuffList extends Component {
   }
 }
 
-class Stuff extends Component {
+class SingleRoute extends Component {
   constructor() {
     super();
     this.state = {
@@ -57,8 +51,8 @@ class Stuff extends Component {
   render() {
     return (
       <div>
-        {this.state.pictures.map(pic =>
-          <div key={pic.results}>
+        {this.state.pictures.map((pic, index) =>
+          <div key={index}>
             <img alt="" src={pic.picture.medium} />
           </div>
         )}
@@ -68,4 +62,4 @@ class Stuff extends Component {
   }
 }
 
-export default StuffList;
+export default Routes;
