@@ -1,5 +1,7 @@
 import React, { Component } from "react"
 import { Route, NavLink } from "react-router-dom"
+import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
+import ReactDOM from 'react-dom'
 
 class RunningRoutes extends Component {
   constructor() {
@@ -38,11 +40,14 @@ class RunningRoutes extends Component {
   }
 }
 
+const position = [51.505, -0.09]
 class RunningRoute extends Component {
+
   constructor() {
     super();
     this.state = {
-      roads: []
+      roads: [],
+      mapLoaded: false
     };
   }
 
@@ -57,10 +62,38 @@ class RunningRoute extends Component {
   }
 
   componentDidMount() {
+    if(!this.state.mapLoaded) {
+      var mapDiv = document.createElement("div");
+      mapDiv.id = "map";
+      document.getElementById("root").appendChild(mapDiv);
+      this.setState({mapLoaded: true});
+    }
+
+    // If necessary, trigger nested updates in componentDidUpdate.
+    // Need to do this instead of rendering the map in render
+
     this.fetchData(this.props.match.params.id);
   }
 
   render() {
+    if(this.state.mapLoaded) {
+      console.log("rendering map")
+      ReactDOM.render(<Map center={position} zoom={13}>
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+        />
+        <Marker position={position}>
+          <Popup>
+            <span>
+              A pretty CSS3 popup.<br />Easily customizable.
+            </span>
+          </Popup>
+        </Marker>
+      </Map>, document.getElementById('map'))
+    }
+    // how do I get the map DOM element before trying to render into it?
+
     return (
       <div>
         {this.state.roads.map((road, index) =>
@@ -68,7 +101,6 @@ class RunningRoute extends Component {
             {road.latitude}, {road.longitude}
           </div>
         )}
-
       </div>
     );
   }
