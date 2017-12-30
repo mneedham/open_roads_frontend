@@ -2,6 +2,7 @@ body {
   background-color: #468cc8;
   padding: 20px;
   margin: 0;
+  font-family: Calibri,serif;
 }
 h1, h2, p, ul, li {
   font-family: sans-serif;
@@ -36,4 +37,47 @@ ul.header li a {
 
 .active {
   background-color: #0099FF;
+}
+
+#main-wrap > div { min-height: 450px; }
+
+#header, #footer {
+  min-height: 40px;
+}
+
+/* layout */
+#main-wrap {
+  /* overflow to handle inner floating block */
+  overflow: hidden;
+}
+
+#sidebar {
+  float: left;
+  width: 30%;
+}
+
+#content-wrap {
+  float: right;
+  width: 70%;
+}
+
+fieldset {
+  border: 1px solid #efefef;
+  border-radius: 8px;
+  padding-top: 10px;
+  margin-right: 5px;
+}
+legend {
+  padding: 2px 4px;
+  background: #fff;
+  /* For better legibility against the box-shadow */
+}
+
+@media (max-width:800px) {
+  #sidebar, #content-wrap {
+    width:100%; /*The width is 100%, when the viewport is 800px or smaller*/
+    height: 50%
+  }
+
+  #main-wrap > div { min-height: 50px; }
 }
