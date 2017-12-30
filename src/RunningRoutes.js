@@ -63,7 +63,6 @@ class RunningRoute extends Component {
   }
 
   render() {
-    // how do I get the map DOM element before trying to render into it?
     return (
       <div>
         <Mapbox roads={this.state.roads} />
@@ -85,22 +84,24 @@ class Mapbox extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    let lats = newProps.roads.map(c => c.latitude).reduce((previous, current) => current += previous);
-    let longs = newProps.roads.map(c => c.longitude).reduce((previous, current) => current += previous);
-    let coordinates = newProps.roads.map(rawPoint => new L.LatLng(rawPoint["latitude"], rawPoint["longitude"]));
+    if(newProps.roads.length > 0) {
+      let lats = newProps.roads.map(c => c.latitude).reduce((previous, current) => current += previous, 0.0);
+      let longs = newProps.roads.map(c => c.longitude).reduce((previous, current) => current += previous, 0.0);
+      let coordinates = newProps.roads.map(rawPoint => new L.LatLng(rawPoint["latitude"], rawPoint["longitude"]));
 
-    L.polyline(
-        coordinates,
-        {
-            color: 'blue',
-            weight: 3,
-            opacity: .7,
-            lineJoin: 'round'
-        }
-    ).addTo(this.state.map);
+      L.polyline(
+          coordinates,
+          {
+              color: 'blue',
+              weight: 3,
+              opacity: .7,
+              lineJoin: 'round'
+          }
+      ).addTo(this.state.map);
 
-    const position = [lats / newProps.roads.length, longs / newProps.roads.length];
-    this.state.map.setView(position, 14);
+      const position = [lats / newProps.roads.length, longs / newProps.roads.length];
+      this.state.map.setView(position, 14);
+    }
   }
 
   createMap() {
