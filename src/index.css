@@ -81,3 +81,7 @@ legend {
 
   #main-wrap > div { min-height: 50px; }
 }
+
+a {
+  color: #468cc8;
+}

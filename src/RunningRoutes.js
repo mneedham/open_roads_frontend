@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { Route, NavLink } from "react-router-dom"
-import L from 'leaflet';
+import RunningRoute from "./RunningRoute"
 
 class RunningRoutes extends Component {
   constructor() {
@@ -28,7 +28,7 @@ class RunningRoutes extends Component {
           <ul>
           {this.state.routes.map((route) =>
             <li key={route.id}>
-              <NavLink exact to={`${this.props.match.url}/${route.id}`}>{route.id}</NavLink> {route.distance}
+              <NavLink exact to={`${this.props.match.url}/${route.id}`}>{route.id}</NavLink> {(route.distance / 1.6 / 1000).toFixed(2)} miles
             </li>
           )}
           </ul>
@@ -39,100 +39,6 @@ class RunningRoutes extends Component {
   }
 }
 
-class RunningRoute extends Component {
-  constructor() {
-    super();
-    this.state = {
-      roads: [],
-      distance: 0
-    };
-  }
 
-  fetchData(id) {
-    fetch(`http://localhost:5000/routes2/${id}`).then(results => results.json()).then(data => {
-      this.setState({
-        roads: data.roads,
-        distance: data.distance
-      });
-    })
-  }
-
-  componentWillReceiveProps(newProps) {
-    this.fetchData(newProps.match.params.id);
-  }
-
-  componentDidMount() {
-    this.fetchData(this.props.match.params.id);
-  }
-
-  render() {
-    return (
-      <div id="main-wrap">
-        <div id="sidebar">
-          <p>Distance: {this.state.distance}</p>
-          <p>
-            <a href={`http://localhost:5000/routes/${this.props.match.params.id}?type=gpx`} download>Download as GPX</a>
-          </p>
-        </div>
-        <div id="content-wrap">
-          <Mapbox roads={this.state.roads} />
-        </div>
-      </div>
-    );
-  }
-}
-
-class Mapbox extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      map: null
-    }
-  }
-
-  componentDidMount() {
-    this.createMap();
-  }
-
-  componentWillReceiveProps(newProps) {
-    if(newProps.roads.length > 0) {
-      let lats = newProps.roads.map(c => c.latitude).reduce((previous, current) => current += previous, 0.0);
-      let longs = newProps.roads.map(c => c.longitude).reduce((previous, current) => current += previous, 0.0);
-      let coordinates = newProps.roads.map(rawPoint => new L.LatLng(rawPoint["latitude"], rawPoint["longitude"]));
-
-      L.polyline(
-          coordinates,
-          {
-              color: 'blue',
-              weight: 3,
-              opacity: .7,
-              lineJoin: 'round'
-          }
-      ).addTo(this.state.map);
-
-      const position = [lats / newProps.roads.length, longs / newProps.roads.length];
-      this.state.map.setView(position, 14);
-    }
-  }
-
-  createMap() {
-    const position = [51.505, -0.09]
-    var map = L.map('map', {drawControl: true}).setView(position, 14);
-
-    this.setState({map: map});
-
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-  }
-
-  render() {
-    return (
-      <div id="map" style={{height:'500px', width: '100%'}}>
-      xx
-      </div>
-    )
-  }
-}
 
 export default RunningRoutes;
