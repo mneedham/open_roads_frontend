@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 import { Route, NavLink } from "react-router-dom"
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
-import ReactDOM from 'react-dom'
+import L from 'leaflet';
 
 class RunningRoutes extends Component {
   constructor() {
@@ -40,9 +39,7 @@ class RunningRoutes extends Component {
   }
 }
 
-const position = [51.505, -0.09]
 class RunningRoute extends Component {
-
   constructor() {
     super();
     this.state = {
@@ -62,47 +59,63 @@ class RunningRoute extends Component {
   }
 
   componentDidMount() {
-    if(!this.state.mapLoaded) {
-      var mapDiv = document.createElement("div");
-      mapDiv.id = "map";
-      document.getElementById("root").appendChild(mapDiv);
-      this.setState({mapLoaded: true});
-    }
-
-    // If necessary, trigger nested updates in componentDidUpdate.
-    // Need to do this instead of rendering the map in render
-
     this.fetchData(this.props.match.params.id);
   }
 
   render() {
-    if(this.state.mapLoaded) {
-      console.log("rendering map")
-      ReactDOM.render(<Map center={position} zoom={13}>
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-        />
-        <Marker position={position}>
-          <Popup>
-            <span>
-              A pretty CSS3 popup.<br />Easily customizable.
-            </span>
-          </Popup>
-        </Marker>
-      </Map>, document.getElementById('map'))
-    }
     // how do I get the map DOM element before trying to render into it?
-
     return (
       <div>
-        {this.state.roads.map((road, index) =>
-          <div key={index}>
-            {road.latitude}, {road.longitude}
-          </div>
-        )}
+        <Mapbox roads={this.state.roads} />
       </div>
     );
+  }
+}
+
+class Mapbox extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      map: null
+    }
+  }
+
+  componentDidMount() {
+    this.createMap();
+  }
+
+  componentWillReceiveProps(newProps) {
+    let lats = newProps.roads.map(c => c.latitude).reduce((previous, current) => current += previous);
+    let longs = newProps.roads.map(c => c.longitude).reduce((previous, current) => current += previous);
+    let coordinates = newProps.roads.map(rawPoint => new L.LatLng(rawPoint["latitude"], rawPoint["longitude"]));
+
+    L.polyline(
+        coordinates,
+        {
+            color: 'blue',
+            weight: 3,
+            opacity: .7,
+            lineJoin: 'round'
+        }
+    ).addTo(this.state.map);
+
+    const position = [lats / newProps.roads.length, longs / newProps.roads.length];
+    this.state.map.setView(position, 14);
+  }
+
+  createMap() {
+    const position = [51.505, -0.09]
+    var map = L.map('map', {drawControl: true}).setView(position, 14);
+
+    this.setState({map: map});
+
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+  }
+
+  render() {
+    return <div id="map" style={{height:'500px', width: '100%'}}>xx</div>
   }
 }
 
