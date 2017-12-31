@@ -85,3 +85,14 @@ legend {
 a {
   color: #468cc8;
 }
+
+ul.route{
+    display:inline-block;
+    padding:0;
+    list-style: none
+}
+
+li.route {
+  display:inline-block;
+  padding: 5px;
+}

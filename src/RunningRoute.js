@@ -5,7 +5,6 @@ class RunningRoute extends Component {
   constructor() {
     super();
     this.state = {
-      id: -1,
       roads: [],
       distance: 0
     };

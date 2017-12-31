@@ -6,8 +6,9 @@ class Mapbox extends React.Component {
   constructor() {
     super();
     this.state = {
-      id: -1,
       map: null,
+      height: "500px",
+      zoom: 14,
       roads: [],
       idPassedThrough: false,
       routeDrawn: false
@@ -15,35 +16,35 @@ class Mapbox extends React.Component {
   }
 
   createMap() {
-    let lats = this.state.roads.map(c => c.latitude).reduce((previous, current) => current += previous, 0.0);
-    let longs = this.state.roads.map(c => c.longitude).reduce((previous, current) => current += previous, 0.0);
-    let coordinates = this.state.roads.map(rawPoint => new L.LatLng(rawPoint["latitude"], rawPoint["longitude"]));
+    if(this.state.roads.length > 0) {
+      let lats = this.state.roads.map(c => c.latitude).reduce((previous, current) => current += previous, 0.0);
+      let longs = this.state.roads.map(c => c.longitude).reduce((previous, current) => current += previous, 0.0);
+      let coordinates = this.state.roads.map(rawPoint => new L.LatLng(rawPoint["latitude"], rawPoint["longitude"]));
 
-    const position = [lats / this.state.roads.length, longs / this.state.roads.length];
-    var map = L.map(`map-${this.state.id}`, {drawControl: true}).setView(position, 14);
+      const position = [lats / this.state.roads.length, longs / this.state.roads.length];
+      var map = L.map(`map-${this.state.id}`, {drawControl: true}).setView(position, this.state.zoom);
 
-    this.setState({map: map});
+      this.setState({map: map});
 
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
 
-    L.polyline(
-        coordinates,
-        {
-            color: 'blue',
-            weight: 3,
-            opacity: .7,
-            lineJoin: 'round'
-        }
-    ).addTo(map);
+      L.polyline(
+          coordinates,
+          {
+              color: 'blue',
+              weight: 3,
+              opacity: .7,
+              lineJoin: 'round'
+          }
+      ).addTo(map);
 
-    map.setView(position, 14);
-
-    this.setState({
-      routeDrawn: true,
-      map: map
-    })
+      this.setState({
+        routeDrawn: true,
+        map: map
+      })
+    }
   }
 
   componentWillReceiveProps(newProps) {
@@ -56,12 +57,28 @@ class Mapbox extends React.Component {
     }
   }
 
+  drawMap() {
+    this.createMap();
+    this.setState({
+      routeDrawn: true
+    });
+  }
+
+  componentWillMount() {
+    if(this.props.id) {
+      this.setState({
+        id: this.props.id,
+        roads: this.props.roads,
+        height: this.props.height,
+        zoom: this.props.zoom,
+        idPassedThrough: true
+      }, () => this.drawMap());
+    }
+  }
+
   componentDidUpdate() {
     if(this.state.idPassedThrough && !this.state.routeDrawn) {
-      this.createMap();
-      this.setState({
-        routeDrawn: true
-      });
+      this.drawMap();
     }
   }
 
@@ -74,7 +91,7 @@ class Mapbox extends React.Component {
       )
     } else {
       return (
-        <div id={`map-${this.state.id}`} style={{height:'500px', width: '100%'}}>
+        <div id={`map-${this.state.id}`} style={{height:`${this.state.height}`, width: '100%'}}>
         xx
         </div>
       )
