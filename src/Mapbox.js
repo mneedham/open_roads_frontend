@@ -21,7 +21,9 @@ class Mapbox extends React.Component {
       let coordinates = this.state.roads.map(rawPoint => new L.LatLng(rawPoint["latitude"], rawPoint["longitude"]));
 
       const position = [lats / this.state.roads.length, longs / this.state.roads.length];
-      var map = L.map(`map-${this.state.id}`, {drawControl: true});
+      var map = L.map(`map-${this.state.id}`, {drawControl: true, zoomControl:false});
+      map.dragging.disable();
+      map.scrollWheelZoom.disable()
 
       this.setState({map: map});
 
