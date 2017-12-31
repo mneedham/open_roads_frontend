@@ -26,11 +26,12 @@ class RunningRoutes extends Component {
         <Route exact path={this.props.match.url} render={() => (
           <div>
           <h2>Routes</h2>
+          {this.state.routes.length === 0 && <p>Loading...</p>}
           <ul className="route">
           {this.state.routes.map((route) =>
             <li key={route.id} className="route">
               <div style={{width:"300px"}}>
-                <NavLink exact to={`${this.props.match.url}/${route.id}`}>{(route.distance / 1.6 / 1000).toFixed(2)} miles</NavLink> 
+                <NavLink exact to={`${this.props.match.url}/${route.id}`}>{(route.distance / 1.6 / 1000).toFixed(2)} miles</NavLink>
                 <Mapbox key={route.id} id={route.id} roads={route.roads} height="200px" zoom="11" />
               </div>
             </li>

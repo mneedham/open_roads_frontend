@@ -30,7 +30,7 @@ class Mapbox extends React.Component {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(map);
 
-      L.polyline(
+      let polyline = L.polyline(
           coordinates,
           {
               color: 'blue',
@@ -38,7 +38,11 @@ class Mapbox extends React.Component {
               opacity: .7,
               lineJoin: 'round'
           }
-      ).addTo(map);
+      )
+
+      polyline.addTo(map);
+
+      map.fitBounds(polyline.getBounds());
 
       this.setState({
         routeDrawn: true,
