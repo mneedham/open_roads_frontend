@@ -1,82 +1,82 @@
 import React from "react"
 import L from 'leaflet';
+const uuidv4 = require('uuid/v4');
 
+var MapState = {
+  EMPTY: 1,
+  MAP_DRAWN: 2,
+  ROUTE_DRAWN: 3,
+};
 
 class Mapbox extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      id: null,
+      id: uuidv4(),
       map: null,
-      height: "500px",
+      height: props.height || "500px",
       roads: [],
-      routeDrawn: false
+      routeDrawn: false,
+      mapState: MapState.EMPTY
     }
+  }
+
+  drawRoute() {
+    let coordinates = this.state.roads.map(rawPoint => new L.LatLng(rawPoint["latitude"], rawPoint["longitude"]));
+    let map = this.state.map;
+
+    let polyline = L.polyline(
+        coordinates,
+        {
+            color: 'blue',
+            weight: 3,
+            opacity: .7,
+            lineJoin: 'round'
+        }
+    )
+
+    polyline.addTo(map);
+    map.fitBounds(polyline.getBounds());
   }
 
   createMap() {
-    if(this.state.roads.length > 0) {
-      let coordinates = this.state.roads.map(rawPoint => new L.LatLng(rawPoint["latitude"], rawPoint["longitude"]));
+    var map = L.map(`map-${this.state.id}`, {drawControl: true, zoomControl:false});
+    map.dragging.disable();
+    map.scrollWheelZoom.disable();
+    map.doubleClickZoom.disable();
 
-      var map = L.map(`map-${this.state.id}`, {drawControl: true, zoomControl:false});
-      map.dragging.disable();
-      map.scrollWheelZoom.disable();
-      map.doubleClickZoom.disable();
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
-      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map);
-
-      let polyline = L.polyline(
-          coordinates,
-          {
-              color: 'blue',
-              weight: 3,
-              opacity: .7,
-              lineJoin: 'round'
-          }
-      )
-
-      polyline.addTo(map);
-
-      map.fitBounds(polyline.getBounds());
-
-      this.setState({
-        routeDrawn: true,
-        map: map
-      })
-    }
+    this.setState({
+      routeDrawn: true,
+      map: map,
+      mapState: MapState.MAP_DRAWN
+    })
   }
 
   componentWillReceiveProps(newProps) {
-    if(newProps.id) {
-      this.setState({
-        id: newProps.id,
-        roads: newProps.roads,
-      });
-    }
-  }
-
-  drawMap() {
-    this.createMap();
     this.setState({
-      routeDrawn: true
+      roads: newProps.roads,
     });
   }
 
   componentWillMount() {
-    if(this.props.id) {
+    if(this.state.mapState === MapState.EMPTY) {
       this.setState({
-        id: this.props.id,
-        roads: this.props.roads,
-        height: this.props.height,
-      }, () => this.drawMap());
+        roads: this.props.roads
+      }, () => this.createMap());
     }
   }
 
   componentDidUpdate() {
-    if(this.state.id && !this.state.routeDrawn) {
-      this.drawMap();
+    if(this.state.mapState === MapState.EMPTY) {
+      this.createMap();
+    }
+
+    if(this.state.mapState === MapState.MAP_DRAWN && this.state.roads.length > 0) {
+      this.drawRoute();
     }
   }
 
@@ -90,7 +90,7 @@ class Mapbox extends React.Component {
     } else {
       return (
         <div id={`map-${this.state.id}`} style={{height:`${this.state.height}`, width: '100%'}}>
-        xx
+
         </div>
       )
     }

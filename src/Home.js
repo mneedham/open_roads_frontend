@@ -1,18 +1,27 @@
 import React, { Component } from "react";
+import Mapbox from './Mapbox';
+
+const uuidv4 = require('uuid/v4');
 
 class Home extends Component {
+  constructor() {
+    super();
+    this.state = {
+      id: uuidv4(),
+      height: "500px"
+    }
+  }
+
   render() {
     return (
-      <div>
-        <h2>HELLO</h2>
-        <p>Cras facilisis urna ornare ex volutpat, et
-        convallis erat elementum. Ut aliquam, ipsum vitae
-        gravida suscipit, metus dui bibendum est, eget rhoncus nibh
-        metus nec massa. Maecenas hendrerit laoreet augue
-        nec molestie. Cum sociis natoque penatibus et magnis
-        dis parturient montes, nascetur ridiculus mus.</p>
+      <div id="main-wrap">
+        <div id="sidebar">
+          <p>...</p>
 
-        <p>Duis a turpis sed lacus dapibus elementum sed eu lectus.</p>
+        </div>
+        <div id="content-wrap">
+          <Mapbox id={this.state.id} height={this.state.height} roads={[]} />
+        </div>
       </div>
     );
   }
