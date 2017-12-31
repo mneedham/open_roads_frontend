@@ -8,47 +8,42 @@ class Mapbox extends React.Component {
     this.state = {
       id: -1,
       map: null,
-      divCreated: false,
+      roads: [],
       idPassedThrough: false,
       routeDrawn: false
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    console.log("componentDidUpdate")
-    console.log(this.state);
-    if(this.state.divCreated && this.state.idPassedThrough && !this.state.routeDrawn) {
+  createMap() {
+    let lats = this.state.roads.map(c => c.latitude).reduce((previous, current) => current += previous, 0.0);
+    let longs = this.state.roads.map(c => c.longitude).reduce((previous, current) => current += previous, 0.0);
+    let coordinates = this.state.roads.map(rawPoint => new L.LatLng(rawPoint["latitude"], rawPoint["longitude"]));
 
-      let lats = this.state.roads.map(c => c.latitude).reduce((previous, current) => current += previous, 0.0);
-      let longs = this.state.roads.map(c => c.longitude).reduce((previous, current) => current += previous, 0.0);
-      let coordinates = this.state.roads.map(rawPoint => new L.LatLng(rawPoint["latitude"], rawPoint["longitude"]));
+    const position = [lats / this.state.roads.length, longs / this.state.roads.length];
+    var map = L.map(`map-${this.state.id}`, {drawControl: true}).setView(position, 14);
 
-      const position = [lats / this.state.roads.length, longs / this.state.roads.length];
-      var map = L.map(`map-${this.state.id}`, {drawControl: true}).setView(position, 14);
+    this.setState({map: map});
 
-      this.setState({map: map});
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
-      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map);
+    L.polyline(
+        coordinates,
+        {
+            color: 'blue',
+            weight: 3,
+            opacity: .7,
+            lineJoin: 'round'
+        }
+    ).addTo(map);
 
-      L.polyline(
-          coordinates,
-          {
-              color: 'blue',
-              weight: 3,
-              opacity: .7,
-              lineJoin: 'round'
-          }
-      ).addTo(map);
+    map.setView(position, 14);
 
-      map.setView(position, 14);
-
-      this.setState({
-        routeDrawn: true,
-        map: map
-      })
-    }
+    this.setState({
+      routeDrawn: true,
+      map: map
+    })
   }
 
   componentWillReceiveProps(newProps) {
@@ -59,19 +54,14 @@ class Mapbox extends React.Component {
         idPassedThrough: true
       });
     }
-
-    if(this.state.idPassedThrough) {
-      this.setState({
-        divCreated: true
-      })
-    }
   }
 
-  componentWillMount() {
-    if(this.state.idPassedThrough) {
+  componentDidUpdate() {
+    if(this.state.idPassedThrough && !this.state.routeDrawn) {
+      this.createMap();
       this.setState({
-        divCreated: true
-      })
+        routeDrawn: true
+      });
     }
   }
 
