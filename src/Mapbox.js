@@ -6,19 +6,31 @@ class Mapbox extends React.Component {
   constructor() {
     super();
     this.state = {
-      map: null
+      id: -1,
+      map: null,
+      divCreated: false,
+      idPassedThrough: false,
+      routeDrawn: false
     }
   }
 
-  componentDidMount() {
-    this.createMap();
-  }
+  componentDidUpdate(prevProps, prevState) {
+    console.log("componentDidUpdate")
+    console.log(this.state);
+    if(this.state.divCreated && this.state.idPassedThrough && !this.state.routeDrawn) {
 
-  componentWillReceiveProps(newProps) {
-    if(newProps.roads.length > 0) {
-      let lats = newProps.roads.map(c => c.latitude).reduce((previous, current) => current += previous, 0.0);
-      let longs = newProps.roads.map(c => c.longitude).reduce((previous, current) => current += previous, 0.0);
-      let coordinates = newProps.roads.map(rawPoint => new L.LatLng(rawPoint["latitude"], rawPoint["longitude"]));
+      let lats = this.state.roads.map(c => c.latitude).reduce((previous, current) => current += previous, 0.0);
+      let longs = this.state.roads.map(c => c.longitude).reduce((previous, current) => current += previous, 0.0);
+      let coordinates = this.state.roads.map(rawPoint => new L.LatLng(rawPoint["latitude"], rawPoint["longitude"]));
+
+      const position = [lats / this.state.roads.length, longs / this.state.roads.length];
+      var map = L.map(`map-${this.state.id}`, {drawControl: true}).setView(position, 14);
+
+      this.setState({map: map});
+
+      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
 
       L.polyline(
           coordinates,
@@ -28,30 +40,55 @@ class Mapbox extends React.Component {
               opacity: .7,
               lineJoin: 'round'
           }
-      ).addTo(this.state.map);
+      ).addTo(map);
 
-      const position = [lats / newProps.roads.length, longs / newProps.roads.length];
-      this.state.map.setView(position, 14);
+      map.setView(position, 14);
+
+      this.setState({
+        routeDrawn: true,
+        map: map
+      })
     }
   }
 
-  createMap() {
-    const position = [51.505, -0.09]
-    var map = L.map('map', {drawControl: true}).setView(position, 14);
+  componentWillReceiveProps(newProps) {
+    if(newProps.id) {
+      this.setState({
+        id: newProps.id,
+        roads: newProps.roads,
+        idPassedThrough: true
+      });
+    }
 
-    this.setState({map: map});
+    if(this.state.idPassedThrough) {
+      this.setState({
+        divCreated: true
+      })
+    }
+  }
 
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+  componentWillMount() {
+    if(this.state.idPassedThrough) {
+      this.setState({
+        divCreated: true
+      })
+    }
   }
 
   render() {
-    return (
-      <div id="map" style={{height:'500px', width: '100%'}}>
-      xx
-      </div>
-    )
+    if(!this.state.idPassedThrough) {
+      return (
+        <p>
+          Loading...
+        </p>
+      )
+    } else {
+      return (
+        <div id={`map-${this.state.id}`} style={{height:'500px', width: '100%'}}>
+        xx
+        </div>
+      )
+    }
   }
 }
 

@@ -5,6 +5,7 @@ class RunningRoute extends Component {
   constructor() {
     super();
     this.state = {
+      id: -1,
       roads: [],
       distance: 0
     };
@@ -13,6 +14,7 @@ class RunningRoute extends Component {
   fetchData(id) {
     fetch(`http://localhost:5000/routes2/${id}`).then(results => results.json()).then(data => {
       this.setState({
+        id: id,
         roads: data.roads,
         distance: data.distance
       });
@@ -37,7 +39,7 @@ class RunningRoute extends Component {
           </p>
         </div>
         <div id="content-wrap">
-          <Mapbox roads={this.state.roads} />
+          <Mapbox id={this.state.id} roads={this.state.roads} />
         </div>
       </div>
     );
