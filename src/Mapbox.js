@@ -6,10 +6,10 @@ class Mapbox extends React.Component {
   constructor() {
     super();
     this.state = {
+      id: null,
       map: null,
       height: "500px",
       roads: [],
-      idPassedThrough: false,
       routeDrawn: false
     }
   }
@@ -53,7 +53,6 @@ class Mapbox extends React.Component {
       this.setState({
         id: newProps.id,
         roads: newProps.roads,
-        idPassedThrough: true
       });
     }
   }
@@ -71,19 +70,18 @@ class Mapbox extends React.Component {
         id: this.props.id,
         roads: this.props.roads,
         height: this.props.height,
-        idPassedThrough: true
       }, () => this.drawMap());
     }
   }
 
   componentDidUpdate() {
-    if(this.state.idPassedThrough && !this.state.routeDrawn) {
+    if(this.state.id && !this.state.routeDrawn) {
       this.drawMap();
     }
   }
 
   render() {
-    if(!this.state.idPassedThrough) {
+    if(!this.state.id) {
       return (
         <p>
           Loading...
