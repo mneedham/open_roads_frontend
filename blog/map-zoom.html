@@ -17,7 +17,7 @@
   </div>
 
     <script>
-    var map = L.map('map', {drawControl: true});
+    var map = L.map('map');
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 18,}).addTo(map);
 
     var rawPoints = [
@@ -35,7 +35,7 @@
       { "latitude": 51.356861596801075, "longitude": -0.1936180154828497 },
       { "latitude": 51.358487396611125, "longitude": -0.19349660642888197 }
     ];
-        
+
     var coordinates = rawPoints.map(rawPoint => new L.LatLng(rawPoint["latitude"], rawPoint["longitude"]))
 
     let polyline = L.polyline(
@@ -49,6 +49,7 @@
     );
 
     polyline.addTo(map);
+
     map.fitBounds(polyline.getBounds());
     </script>
   </body>
