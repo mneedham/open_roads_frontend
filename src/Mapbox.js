@@ -8,7 +8,6 @@ class Mapbox extends React.Component {
     this.state = {
       map: null,
       height: "500px",
-      zoom: 14,
       roads: [],
       idPassedThrough: false,
       routeDrawn: false
@@ -22,7 +21,7 @@ class Mapbox extends React.Component {
       let coordinates = this.state.roads.map(rawPoint => new L.LatLng(rawPoint["latitude"], rawPoint["longitude"]));
 
       const position = [lats / this.state.roads.length, longs / this.state.roads.length];
-      var map = L.map(`map-${this.state.id}`, {drawControl: true}).setView(position, this.state.zoom);
+      var map = L.map(`map-${this.state.id}`, {drawControl: true});
 
       this.setState({map: map});
 
@@ -74,7 +73,6 @@ class Mapbox extends React.Component {
         id: this.props.id,
         roads: this.props.roads,
         height: this.props.height,
-        zoom: this.props.zoom,
         idPassedThrough: true
       }, () => this.drawMap());
     }

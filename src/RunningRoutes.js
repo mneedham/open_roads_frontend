@@ -32,7 +32,7 @@ class RunningRoutes extends Component {
             <li key={route.id} className="route">
               <div style={{width:"300px"}}>
                 <NavLink exact to={`${this.props.match.url}/${route.id}`}>{(route.distance / 1.6 / 1000).toFixed(2)} miles</NavLink>
-                <Mapbox key={route.id} id={route.id} roads={route.roads} height="200px" zoom="11" />
+                <Mapbox key={route.id} id={route.id} roads={route.roads} height="200px" />
               </div>
             </li>
           )}
