@@ -16,8 +16,8 @@ class Mapbox extends React.Component {
       map: null,
       height: props.height || "500px",
       roads: [],
-      routeDrawn: false,
-      mapState: MapState.EMPTY
+      mapState: MapState.EMPTY,
+      centreOnHouse: props.centreOnHouse || false
     }
   }
 
@@ -41,16 +41,21 @@ class Mapbox extends React.Component {
 
   createMap() {
     var map = L.map(`map-${this.state.id}`, {drawControl: true, zoomControl:false});
-    map.dragging.disable();
-    map.scrollWheelZoom.disable();
-    map.doubleClickZoom.disable();
+
+    // map.dragging.disable();
+    // map.scrollWheelZoom.disable();
+    // map.doubleClickZoom.disable();
+
+    if(this.state.centreOnHouse) {
+      const position = [51.357397146246264, -0.20153965352074504];
+      map.setView(position, 13);
+    }
 
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     this.setState({
-      routeDrawn: true,
       map: map,
       mapState: MapState.MAP_DRAWN
     })
