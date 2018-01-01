@@ -15,7 +15,7 @@ class Mapbox extends React.Component {
       id: uuidv4(),
       map: null,
       height: props.height || "500px",
-      roads: [],
+      roads: props.roads || [],
       mapState: MapState.EMPTY,
       centreOnHouse: props.centreOnHouse || false
     }
@@ -67,11 +67,9 @@ class Mapbox extends React.Component {
     });
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if(this.state.mapState === MapState.EMPTY) {
-      this.setState({
-        roads: this.props.roads
-      }, () => this.createMap());
+      this.createMap()
     }
   }
 
