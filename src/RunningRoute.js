@@ -2,8 +2,10 @@ import React, { Component } from "react"
 import Mapbox from './Mapbox'
 
 class RunningRoute extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    console.log(props);
+    super(props);
+    document.title = props.title;
     this.state = {
       roads: [],
       distance: 0

@@ -5,8 +5,9 @@ import GenerateRoute from "./GenerateRoute"
 const uuidv4 = require('uuid/v4');
 
 class Home extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    document.title = props.title;
     this.state = {
       id: uuidv4(),
       height: "500px"

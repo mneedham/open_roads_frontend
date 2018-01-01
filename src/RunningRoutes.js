@@ -4,8 +4,9 @@ import RunningRoute from "./RunningRoute"
 import Mapbox from "./Mapbox"
 
 class RunningRoutes extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    document.title = props.title;
     this.state = {
         routes: []
     };
@@ -17,11 +18,15 @@ class RunningRoutes extends Component {
     })
   }
 
+  componentWillReceiveProps(nextProps) {
+    document.title = nextProps.title;
+  }
+
   render() {
     return (
       <div>
         <Route path={`${this.props.match.url}/:id`} render={props => (
-            <RunningRoute {...props} key={this.props.match.id}  />
+            <RunningRoute {...props} key={props.match.params.id}  title={`Route ${props.match.params.id}  - Where should I go running?`} />
         )} />
         <Route exact path={this.props.match.url} render={() => (
           <div>

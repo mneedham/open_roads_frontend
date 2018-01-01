@@ -20,8 +20,8 @@ class Main extends Component {
             <li><NavLink to="/runs">Runs</NavLink></li>
           </ul>
           <div className="content">
-            <Route exact path="/" component={Home}/>
-            <Route path="/routes" component={RunningRoutes} />
+            <Route exact path="/" component={props => <Home title="Generate a new route - Where should I go running?" {...props} />}/>
+            <Route path="/routes" component={props => <RunningRoutes title="Generated routes - Where should I go running?" {...props}  />} />
             <Route path="/runs" component={Runs}/>
           </div>
         </div>
