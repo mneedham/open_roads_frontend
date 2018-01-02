@@ -14,17 +14,19 @@ class RunningRoutes extends Component {
     this.showMore = this.showMore.bind(this);
   }
 
-  componentDidMount() {
+  fetchRoads() {
     fetch(`http://localhost:5000/routes2`).then(results => results.json()).then(data => {
       this.setState({routes: data});
     })
   }
 
+  componentDidMount() {
+    this.fetchRoads();
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if(this.state.counter > prevState.counter) {
-      fetch(`http://localhost:5000/routes2`).then(results => results.json()).then(data => {
-        this.setState({routes: data});
-      })
+      this.fetchRoads();
     }
   }
 
