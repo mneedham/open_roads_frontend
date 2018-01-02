@@ -8,8 +8,10 @@ class RunningRoutes extends Component {
     super(props);
     document.title = props.title;
     this.state = {
+        counter: 1,
         routes: []
     };
+    this.showMore = this.showMore.bind(this);
   }
 
   componentDidMount() {
@@ -18,8 +20,22 @@ class RunningRoutes extends Component {
     })
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if(this.state.counter > prevState.counter) {
+      fetch(`http://localhost:5000/routes2`).then(results => results.json()).then(data => {
+        this.setState({routes: data});
+      })
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     document.title = nextProps.title;
+  }
+
+  showMore(event) {
+    this.setState((prevState, props) => {
+      return {counter: prevState.counter + 1};
+    });
   }
 
   render() {
@@ -30,7 +46,11 @@ class RunningRoutes extends Component {
         )} />
         <Route exact path={this.props.match.url} render={() => (
           <div>
-          <h2>Routes</h2>
+          <div>
+            <h2 style={{display: 'inline'}}>Routes</h2>
+            <div style={{float: 'right'}} onClick={this.showMore}><a href="#">Show more</a></div>
+          </div>
+
           {this.state.routes.length === 0 && <p>Loading...</p>}
           <ul className="route">
           {this.state.routes.map((route) =>

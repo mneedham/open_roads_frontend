@@ -10,10 +10,12 @@ class GenerateRoute extends Component {
       startLatitude: props.startLatitude,
       startLongitude: props.startLongitude,
       estimatedDistance: props.estimatedDistance || 5000,
-      generatedRouteId: null
+      generatedRouteId: null,
+      selectedSegment: props.selectedSegment || ""
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSegmentChange = this.handleSegmentChange.bind(this);
   }
 
   handleSubmit(event) {
@@ -30,6 +32,18 @@ class GenerateRoute extends Component {
     }).catch(console.log);
   }
 
+  handleSegmentChange(event) {
+    this.setState({selectedSegment: event.target.value});
+  }
+
+  componentDidMount() {
+    fetch("http://localhost:5000/segments2").then(results => results.json()).then(data => {
+      this.setState({
+        segments: data
+      });
+    })
+  }
+
   render() {
     if(this.state.generatedRouteId) {
       return ( <Redirect to={{ pathname: `/routes/${this.state.generatedRouteId}`, push: true }}/> )
@@ -41,10 +55,10 @@ class GenerateRoute extends Component {
             <legend>Route details</legend>
             <p>
               <label htmlFor="segment">Segment</label>
-              <select id="segment" name="segment">
+              <select value={this.state.selectedSegment} id="segment" name="segment" onChange={this.handleSegmentChange}>
                 <option value="">None</option>
                 {this.state.segments.map(segment =>
-                  <option>foo</option>
+                  <option key={segment.id} value={segment.id}>{segment.name}</option>
                 )}
 
               </select>
