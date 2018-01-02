@@ -14,10 +14,11 @@ class Mapbox extends React.Component {
     this.state = {
       id: uuidv4(),
       map: null,
-      height: props.height || "500px",
       roads: props.roads || [],
       mapState: MapState.EMPTY,
-      centreOnHouse: props.centreOnHouse || false
+      centreOnHouse: props.centreOnHouse || false,
+      height: props.height || "500px",
+      zoom: props.zoom || false
     }
   }
 
@@ -37,14 +38,21 @@ class Mapbox extends React.Component {
 
     polyline.addTo(map);
     map.fitBounds(polyline.getBounds());
+
+    this.setState({
+      map: map,
+      mapState: MapState.ROUTE_DRAWN
+    })
   }
 
   createMap() {
-    var map = L.map(`map-${this.state.id}`, {drawControl: true, zoomControl:false});
+    var map = L.map(`map-${this.state.id}`, {drawControl: true, zoomControl:this.state.zoom});
 
-    // map.dragging.disable();
-    // map.scrollWheelZoom.disable();
-    // map.doubleClickZoom.disable();
+    if(!this.state.zoom) {
+      map.dragging.disable();
+      map.scrollWheelZoom.disable();
+      map.doubleClickZoom.disable();
+    }
 
     if(this.state.centreOnHouse) {
       const position = [51.357397146246264, -0.20153965352074504];

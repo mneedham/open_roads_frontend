@@ -71,6 +71,4 @@ class RunningRoutes extends Component {
   }
 }
 
-
-
 export default RunningRoutes;

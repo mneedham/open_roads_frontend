@@ -24,7 +24,7 @@ class Home extends Component {
 
         </div>
         <div id="content-wrap">
-          <Mapbox id={this.state.id} height={this.state.height} roads={[]} centreOnHouse={true} />
+          <Mapbox id={this.state.id} height={this.state.height} roads={[]} centreOnHouse={true} zoom={true} />
         </div>
       </div>
     );
