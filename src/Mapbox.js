@@ -1,6 +1,9 @@
 import React from "react"
 import L from 'leaflet';
+import 'leaflet-draw';
+
 const uuidv4 = require('uuid/v4');
+
 
 var MapState = {
   EMPTY: 1,
@@ -18,8 +21,32 @@ class Mapbox extends React.Component {
       mapState: MapState.EMPTY,
       centreOnHouse: props.centreOnHouse || false,
       height: props.height || "500px",
-      zoom: props.zoom || false
+      zoom: props.zoom || false,
+      drawShapes: props.drawShapes || false
     }
+  }
+
+  drawShapes(map) {
+    var drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
+    var drawControl = new L.Control.Draw({
+      edit: {
+        featureGroup: drawnItems
+      }
+    });
+    map.addControl(drawControl);
+
+    map.on(L.Draw.Event.CREATED, function (event) {
+      var layer = event.layer;
+      drawnItems.addLayer(layer);
+
+       if ( event.layerType === "circle" )
+       {
+           document.getElementById( "shapeLatitude" ).value = layer._latlng.lat;
+           document.getElementById( "shapeLongitude" ).value = layer._latlng.lng;
+           document.getElementById( "shapeRadius" ).value = layer._mRadius;
+       }
+    });
   }
 
   drawRoute() {
@@ -62,6 +89,10 @@ class Mapbox extends React.Component {
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
+
+    if(this.state.drawShapes) {
+      this.drawShapes(map);
+    }
 
     this.setState({
       map: map,
