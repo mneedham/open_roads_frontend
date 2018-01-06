@@ -50,7 +50,7 @@ class RunningRoutes extends Component {
           <div>
           <div>
             <h2 style={{display: 'inline'}}>Routes</h2>
-            <div style={{float: 'right'}} onClick={this.showMore}><a href="#">Show more</a></div>
+            <div style={{float: 'right'}} onClick={this.showMore}><a href="#more">Show more</a></div>
           </div>
 
           {this.state.routes.length === 0 && <p>Loading...</p>}

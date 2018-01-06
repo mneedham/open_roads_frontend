@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Mapbox from './Mapbox';
-import GenerateRoute from "./GenerateRoute"
+import GenerateRoute from "./GenerateRoute";
 
 const uuidv4 = require('uuid/v4');
 
@@ -17,6 +17,7 @@ class Home extends Component {
   render() {
     const startLatitude = 51.357397146246264;
     const startLongitude = -0.20153965352074504;
+
     return (
       <div id="main-wrap">
         <div id="sidebar">
