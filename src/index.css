@@ -59,6 +59,7 @@ ul.header li a {
 #content-wrap {
   float: right;
   width: 70%;
+    height: 450px;
 }
 
 fieldset {
@@ -95,4 +96,12 @@ ul.route{
 li.route {
   display:inline-block;
   padding: 5px;
+}
+
+.leaflet-container {
+  height: 100%;
+}
+
+.sr-only {
+  display: none;
 }

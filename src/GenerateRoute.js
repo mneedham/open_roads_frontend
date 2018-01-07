@@ -23,10 +23,15 @@ class GenerateRoute extends Component {
     {
         event.preventDefault();
 
+        let body = this.state;
+        body.shapeLatitude = this.props.shapeLatitude;
+        body.shapeLongitude = this.props.shapeLongitude;
+        body.shapeRadius = this.props.shapeRadius;
+
         fetch( 'http://localhost:5000/routes2', {
             method: 'POST',
             headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-            body: JSON.stringify( this.state ),
+            body: JSON.stringify( body ),
         } ).then( results => results.json() ).then( data => {
             this.setState( {
                 generatedRouteId: data.routeId
@@ -36,7 +41,9 @@ class GenerateRoute extends Component {
 
     handleSegmentChange( event )
     {
-        this.setState( {selectedSegment: event.target.value} );
+        this.setState( {
+            selectedSegment: event.target.value
+        } );
     }
 
     componentDidMount()
