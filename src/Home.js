@@ -25,11 +25,11 @@ class Home extends Component {
         {
             let layer = event.layer;
             console.log( layer._latlng.lat )
-            this.setState({
+            this.setState( {
                 shapeLatitude: layer._latlng.lat,
                 shapeLongitude: layer._latlng.lng,
                 shapeRadius: layer._mRadius
-            });
+            } );
         }
     }
 
@@ -59,9 +59,7 @@ class Home extends Component {
 
                         <FeatureGroup>
                             <EditControl
-                                position='topright'
                                 onCreated={this.onCreate}
-                                onDeleted={this.onDelete}
                                 draw={{
                                     rectangle: false,
                                     polygon: false,
@@ -69,7 +67,6 @@ class Home extends Component {
                                     marker: false
                                 }}
                             />
-                            <Circle center={[51.51, -0.06]} radius={200}/>
                         </FeatureGroup>
                     </Map>
                 </div>
