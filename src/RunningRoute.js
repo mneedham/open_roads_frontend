@@ -20,7 +20,7 @@ class RunningRoute extends Component {
         fetch( `http://localhost:5000/routes2/${id}` ).then( results => results.json() ).then( data => {
             this.setState( {
                 id: id,
-                roads: data.roads,
+                roads: data.roads.map( rawPoint => [rawPoint["latitude"], rawPoint["longitude"]] ),
                 distance: data.distance
             } );
         } )
@@ -51,7 +51,7 @@ class RunningRoute extends Component {
                     {this.state.roads.length > 0 &&
                     <Map
                         length={4}
-                        bounds={L.polyline(this.state.roads.map( rawPoint => [rawPoint["latitude"], rawPoint["longitude"]] )).getBounds()}
+                        bounds={L.polyline( this.state.roads).getBounds()}
                         zoom={14}>
 
                         <TileLayer
@@ -60,7 +60,7 @@ class RunningRoute extends Component {
                         />
 
                         <Polyline
-                            positions={this.state.roads.map( rawPoint => [rawPoint["latitude"], rawPoint["longitude"]] )}
+                            positions={this.state.roads}
                             color={"blue"}
                             weight={3}
                             opacity={.7}
