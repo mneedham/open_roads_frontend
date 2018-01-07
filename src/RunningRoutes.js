@@ -2,6 +2,9 @@ import React, {Component} from "react"
 import {Route, NavLink} from "react-router-dom"
 import RunningRoute from "./RunningRoute"
 import Mapbox from "./Mapbox"
+import L from 'leaflet';
+
+import {FeatureGroup, Map, TileLayer, Polyline} from "react-leaflet"
 
 class RunningRoutes extends Component {
     constructor( props )
@@ -10,7 +13,11 @@ class RunningRoutes extends Component {
         document.title = props.title;
         this.state = {
             counter: 1,
-            routes: []
+            routes: [],
+            centre: {
+                lat: 51.357397146246264,
+                lng: -0.20153965352074504,
+            },
         };
         this.showMore = this.showMore.bind( this );
     }
@@ -66,12 +73,36 @@ class RunningRoutes extends Component {
                         <ul className="route">
                             {this.state.routes.map( ( route ) =>
                                 <li key={route.id} className="route">
-                                    <div style={{width: "300px"}}>
+                                    <div style={{width: "300px", height: "150px"}}>
                                         <NavLink exact
                                                  to={`${this.props.match.url}/${route.id}`}>
                                             {(route.distance / 1.6 / 1000).toFixed( 2 )} miles
                                         </NavLink>
-                                        <Mapbox key={route.id} id={route.id} roads={route.roads} height="150px"/>
+
+                                        <Map
+                                            length={4}
+                                            zoomControl={false}
+                                            dragging={false}
+                                            scrollWheelZoom={false}
+                                            doubleClickZoom={false}
+                                            bounds={L.polyline(route.roads.map( rawPoint => [rawPoint["latitude"], rawPoint["longitude"]] )).getBounds()}
+                                            zoom={14}>
+
+                                            <TileLayer
+                                                attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                            />
+
+                                            <Polyline
+                                                positions={route.roads.map( rawPoint => [rawPoint["latitude"], rawPoint["longitude"]] )}
+                                                color={"blue"}
+                                                weight={3}
+                                                opacity={.7}
+                                                lineJoin={"round"}
+                                            />
+
+                                        </Map>
+
                                     </div>
                                 </li>
                             )}

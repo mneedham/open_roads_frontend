@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-import {Map, TileLayer, FeatureGroup, Circle} from "react-leaflet"
+import {FeatureGroup, Map, TileLayer} from "react-leaflet"
 import {EditControl} from "react-leaflet-draw"
 
 import GenerateRoute from "./GenerateRoute"
