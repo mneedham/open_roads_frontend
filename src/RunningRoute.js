@@ -1,5 +1,8 @@
 import React, {Component} from "react"
-import Mapbox from './Mapbox'
+
+import L from 'leaflet';
+
+import {Map, Polyline, TileLayer} from "react-leaflet"
 
 class RunningRoute extends Component {
     constructor( props )
@@ -45,7 +48,27 @@ class RunningRoute extends Component {
                     </p>
                 </div>
                 <div id="content-wrap">
-                    <Mapbox id={this.state.id} roads={this.state.roads}/>
+                    {this.state.roads.length > 0 &&
+                    <Map
+                        length={4}
+                        bounds={L.polyline(this.state.roads.map( rawPoint => [rawPoint["latitude"], rawPoint["longitude"]] )).getBounds()}
+                        zoom={14}>
+
+                        <TileLayer
+                            attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+
+                        <Polyline
+                            positions={this.state.roads.map( rawPoint => [rawPoint["latitude"], rawPoint["longitude"]] )}
+                            color={"blue"}
+                            weight={3}
+                            opacity={.7}
+                            lineJoin={"round"}
+                        />
+
+                    </Map>}
+
                 </div>
             </div>
         );

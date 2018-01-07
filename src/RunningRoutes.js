@@ -1,10 +1,9 @@
 import React, {Component} from "react"
-import {Route, NavLink} from "react-router-dom"
+import {NavLink, Route} from "react-router-dom"
 import RunningRoute from "./RunningRoute"
-import Mapbox from "./Mapbox"
 import L from 'leaflet';
 
-import {FeatureGroup, Map, TileLayer, Polyline} from "react-leaflet"
+import {Map, Polyline, TileLayer} from "react-leaflet"
 
 class RunningRoutes extends Component {
     constructor( props )
