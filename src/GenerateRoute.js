@@ -8,8 +8,6 @@ class GenerateRoute extends Component {
         super( props );
         this.state = {
             segments: [],
-            startLatitude: props.startLatitude,
-            startLongitude: props.startLongitude,
             estimatedDistance: props.estimatedDistance || 5000,
             generatedRouteId: null,
             selectedSegment: props.selectedSegment || ""
@@ -27,6 +25,8 @@ class GenerateRoute extends Component {
         body.shapeLatitude = this.props.shapeLatitude;
         body.shapeLongitude = this.props.shapeLongitude;
         body.shapeRadius = this.props.shapeRadius;
+        body.startLatitude = this.props.startLatitude;
+        body.startLongitude = this.props.startLongitude;
 
         fetch( 'http://localhost:5000/routes2', {
             method: 'POST',
@@ -84,8 +84,8 @@ class GenerateRoute extends Component {
                                 <input type="text"
                                        name="latitude"
                                        id="latitude"
-                                       defaultValue={this.state.startLatitude}
-                                       onChange={e => this.setState( {startLatitude: e.target.value} )}
+                                       defaultValue={this.props.startLatitude}
+                                       onChange={e => this.props.onStartLatitudeChange( e.target.value )}
                                        size="20"/>
                             </p>
 
@@ -94,8 +94,8 @@ class GenerateRoute extends Component {
                                 <input type="text"
                                        name="longitude"
                                        id="longitude"
-                                       defaultValue={this.state.startLongitude}
-                                       onChange={e => this.setState( {startLongitude: e.target.value} )}
+                                       defaultValue={this.props.startLongitude}
+                                       onChange={e => this.props.onStartLongitudeChange( e.target.value )}
                                        size="20"/>
                             </p>
 

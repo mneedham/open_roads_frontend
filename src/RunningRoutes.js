@@ -84,7 +84,7 @@ class RunningRoutes extends Component {
                                             dragging={false}
                                             scrollWheelZoom={false}
                                             doubleClickZoom={false}
-                                            bounds={L.polyline(route.roads.map( rawPoint => [rawPoint["latitude"], rawPoint["longitude"]] )).getBounds()}
+                                            bounds={L.polyline( route.roads.map( rawPoint => [rawPoint["latitude"], rawPoint["longitude"]] ) ).getBounds()}
                                             zoom={14}>
 
                                             <TileLayer

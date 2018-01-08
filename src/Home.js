@@ -16,6 +16,7 @@ class Home extends Component {
             },
         }
         this.onCreate = this.onCreate.bind( this );
+        this.onStartLatitudeChange = this.onStartLatitudeChange.bind( this );
     }
 
     onCreate( event )
@@ -33,6 +34,26 @@ class Home extends Component {
         }
     }
 
+    onStartLatitudeChange( value )
+    {
+        this.setState({
+            centre: {
+                lat: value,
+                lng: this.state.centre.lng
+            }
+        })
+    }
+
+    onStartLongitudeChange( value )
+    {
+        this.setState({
+            centre: {
+                lat: this.state.centre.lat,
+                lng: value
+            }
+        })
+    }
+
     render()
     {
 
@@ -41,7 +62,9 @@ class Home extends Component {
                 <div id="sidebar">
                     <GenerateRoute
                         startLatitude={this.state.centre.lat}
+                        onStartLatitudeChange={this.onStartLatitudeChange}
                         startLongitude={this.state.centre.lng}
+                        onStartLongitudeChange={this.onStartLongitudeChange}
                         shapeLatitude={this.state.shapeLatitude}
                         shapeLongitude={this.state.shapeLongitude}
                         shapeRadius={this.state.shapeRadius}
