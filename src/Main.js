@@ -7,6 +7,7 @@ import {
 import Home from "./Home";
 import Runs from "./Runs";
 import RunningRoutes from "./RunningRoutes";
+import Segments from "./Segments";
 
 class Main extends Component {
     render()
@@ -19,12 +20,15 @@ class Main extends Component {
                         <li><NavLink exact to="/">Generate Route</NavLink></li>
                         <li><NavLink to="/routes">Routes</NavLink></li>
                         <li><NavLink to="/runs">Runs</NavLink></li>
+                        <li><NavLink to="/segments">Segments</NavLink></li>
                     </ul>
                     <div className="content">
                         <Route exact path="/" component={props => <Home
                             title="Generate a new route - Where should I go running?" {...props} />}/>
                         <Route path="/routes" component={props => <RunningRoutes
                             title="Generated routes - Where should I go running?" {...props}  />}/>
+                        <Route path="/segments" component={props => <Segments
+                            title="Segments - Where should I go running?" {...props}  />}/>
                         <Route path="/runs" component={Runs}/>
                     </div>
                 </div>
