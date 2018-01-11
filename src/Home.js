@@ -17,6 +17,7 @@ class Home extends Component {
         }
         this.onCreate = this.onCreate.bind( this );
         this.onStartLatitudeChange = this.onStartLatitudeChange.bind( this );
+        this.onStartLongitudeChange = this.onStartLongitudeChange.bind( this );
     }
 
     onCreate( event )

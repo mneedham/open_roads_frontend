@@ -16,10 +16,13 @@ class Segment extends Component {
 
     fetchData( id )
     {
+
         fetch( `http://localhost:5000/segments2/${id}` ).then( results => results.json() ).then( data => {
+            let {roads} = data;
+
             this.setState( {
                 id: id,
-                roads: data.roads.map( rawPoint => [rawPoint["latitude"], rawPoint["longitude"]] ),
+                roads: roads.map( rawPoint => [rawPoint["latitude"], rawPoint["longitude"]] ),
                 name: data.name
             } );
         } )
