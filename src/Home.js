@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-import {FeatureGroup, Map, TileLayer} from "react-leaflet"
+import {FeatureGroup, Map, TileLayer, Polyline} from "react-leaflet"
 import {EditControl} from "react-leaflet-draw"
 
 import GenerateRoute from "./GenerateRoute"
@@ -14,7 +14,9 @@ class Home extends Component {
                 lat: 51.357397146246264,
                 lng: -0.20153965352074504,
             },
-            selectedSegment: ""
+            selectedSegment: {
+                id: ""
+            }
         }
         this.onCreate = this.onCreate.bind( this );
         this.onStartLatitudeChange = this.onStartLatitudeChange.bind( this );
@@ -101,6 +103,16 @@ class Home extends Component {
                                 }}
                             />
                         </FeatureGroup>
+
+                        {this.state.selectedSegment.id !== "" &&
+                            <Polyline
+                                positions={this.state.selectedSegment.roads.map( rawPoint => [rawPoint["latitude"], rawPoint["longitude"]] )}
+                                color={"blue"}
+                                weight={3}
+                                opacity={.7}
+                                lineJoin={"round"}
+                            />
+                        }
                     </Map>
                 </div>
             </div>

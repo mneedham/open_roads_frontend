@@ -7,7 +7,7 @@ class GenerateRoute extends Component {
     {
         super( props );
         this.state = {
-            segments: [],
+            segments: {},
             estimatedDistance: props.estimatedDistance || 5000,
             generatedRouteId: null
         };
@@ -20,13 +20,14 @@ class GenerateRoute extends Component {
     {
         event.preventDefault();
 
-        let body = this.state;
+        let body = {};
+        body.estimatedDistance = this.state.estimatedDistance;
         body.shapeLatitude = this.props.shapeLatitude;
         body.shapeLongitude = this.props.shapeLongitude;
         body.shapeRadius = this.props.shapeRadius;
         body.startLatitude = this.props.startLatitude;
         body.startLongitude = this.props.startLongitude;
-        body.selectedSegment = this.props.selectedSegment;
+        body.selectedSegment = this.props.selectedSegment.id.toString();
 
         fetch( 'http://localhost:5000/routes2', {
             method: 'POST',
@@ -49,8 +50,15 @@ class GenerateRoute extends Component {
     componentDidMount()
     {
         fetch( "http://localhost:5000/segments2" ).then( results => results.json() ).then( data => {
+
+            let segments = [];
+            for ( let item of data )
+            {
+                segments[item.id] = item;
+            }
+
             this.setState( {
-                segments: data
+                segments: segments
             } );
         } )
     }
@@ -69,11 +77,16 @@ class GenerateRoute extends Component {
                             <legend>Route details</legend>
                             <p>
                                 <label htmlFor="segment">Segment</label>
-                                <select value={this.props.selectedSegment} id="segment" name="segment"
-                                        onChange={e => this.props.onSegmentChange(e.target.value) }>
+                                <select value={this.props.selectedSegment.id} id="segment" name="segment"
+                                        onChange={e => {
+                                            let segment = this.state.segments[e.target.value];
+                                            this.props.onSegmentChange( segment );
+                                        }
+                                        }>
                                     <option value="">None</option>
-                                    {this.state.segments.map( segment =>
-                                        <option key={segment.id} value={segment.id}>{segment.name}</option>
+                                    {Object.keys( this.state.segments ).map( segmentId =>
+                                        <option key={segmentId}
+                                                value={segmentId}>{this.state.segments[segmentId].name}</option>
                                     )}
 
                                 </select>
