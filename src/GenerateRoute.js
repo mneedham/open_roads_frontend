@@ -84,10 +84,11 @@ class GenerateRoute extends Component {
                                         }
                                         }>
                                     <option value="">None</option>
-                                    {Object.keys( this.state.segments ).map( segmentId =>
-                                        <option key={segmentId}
-                                                value={segmentId}>{this.state.segments[segmentId].name}</option>
-                                    )}
+                                    {Object.entries( this.state.segments ).sort((a,b) => a[1].name.localeCompare(b[1].name)).map( segment => {
+                                        let segmentId = segment[0];
+                                        return (<option key={segmentId}
+                                                value={segmentId}>{this.state.segments[segmentId].name}</option>);
+                                    })}
 
                                 </select>
                             </p>
