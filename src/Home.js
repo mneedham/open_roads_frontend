@@ -14,15 +14,16 @@ class Home extends Component {
                 lat: 51.357397146246264,
                 lng: -0.20153965352074504,
             },
+            selectedSegment: ""
         }
         this.onCreate = this.onCreate.bind( this );
         this.onStartLatitudeChange = this.onStartLatitudeChange.bind( this );
         this.onStartLongitudeChange = this.onStartLongitudeChange.bind( this );
+        this.onSegmentChange = this.onSegmentChange.bind( this );
     }
 
     onCreate( event )
     {
-        console.log( event );
         if ( event.layerType === "circle" )
         {
             let layer = event.layer;
@@ -35,29 +36,35 @@ class Home extends Component {
         }
     }
 
+    onSegmentChange( value )
+    {
+        this.setState( {
+            selectedSegment: value
+        });
+    }
+
     onStartLatitudeChange( value )
     {
-        this.setState({
+        this.setState( {
             centre: {
                 lat: value,
                 lng: this.state.centre.lng
             }
-        })
+        } )
     }
 
     onStartLongitudeChange( value )
     {
-        this.setState({
+        this.setState( {
             centre: {
                 lat: this.state.centre.lat,
                 lng: value
             }
-        })
+        } )
     }
 
     render()
     {
-
         return (
             <div id="main-wrap">
                 <div id="sidebar">
@@ -66,6 +73,8 @@ class Home extends Component {
                         onStartLatitudeChange={this.onStartLatitudeChange}
                         startLongitude={this.state.centre.lng}
                         onStartLongitudeChange={this.onStartLongitudeChange}
+                        selectedSegment={this.state.selectedSegment}
+                        onSegmentChange={this.onSegmentChange}
                         shapeLatitude={this.state.shapeLatitude}
                         shapeLongitude={this.state.shapeLongitude}
                         shapeRadius={this.state.shapeRadius}

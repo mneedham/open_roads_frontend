@@ -9,8 +9,7 @@ class GenerateRoute extends Component {
         this.state = {
             segments: [],
             estimatedDistance: props.estimatedDistance || 5000,
-            generatedRouteId: null,
-            selectedSegment: props.selectedSegment || ""
+            generatedRouteId: null
         };
 
         this.handleSubmit = this.handleSubmit.bind( this );
@@ -27,6 +26,7 @@ class GenerateRoute extends Component {
         body.shapeRadius = this.props.shapeRadius;
         body.startLatitude = this.props.startLatitude;
         body.startLongitude = this.props.startLongitude;
+        body.selectedSegment = this.props.selectedSegment;
 
         fetch( 'http://localhost:5000/routes2', {
             method: 'POST',
@@ -69,8 +69,8 @@ class GenerateRoute extends Component {
                             <legend>Route details</legend>
                             <p>
                                 <label htmlFor="segment">Segment</label>
-                                <select value={this.state.selectedSegment} id="segment" name="segment"
-                                        onChange={this.handleSegmentChange}>
+                                <select value={this.props.selectedSegment} id="segment" name="segment"
+                                        onChange={e => this.props.onSegmentChange(e.target.value) }>
                                     <option value="">None</option>
                                     {this.state.segments.map( segment =>
                                         <option key={segment.id} value={segment.id}>{segment.name}</option>
