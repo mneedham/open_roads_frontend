@@ -10,7 +10,8 @@ class Segment extends Component {
         super(props);
         this.state = {
             name: "",
-            roads: []
+            roads: [],
+            distance: 0
         }
     }
 
@@ -23,7 +24,8 @@ class Segment extends Component {
             this.setState( {
                 id: id,
                 roads: roads.map( rawPoint => [rawPoint["latitude"], rawPoint["longitude"]] ),
-                name: data.name
+                name: data.name,
+                distance: data.distance
             } );
         } )
     }
@@ -43,7 +45,12 @@ class Segment extends Component {
             <div>
                 <div id="main-wrap">
                     <div id="sidebar">
-                        <p>{this.state.name}</p>
+                        <p>
+                            {this.state.name}
+                            </p>
+                        <p>
+                            {(this.state.distance / 1.6 / 1000).toFixed( 2 )} miles
+                        </p>
 
                     </div>
                     <div id="content-wrap">

@@ -5,7 +5,7 @@ import {
     BrowserRouter
 } from "react-router-dom";
 import Home from "./Home";
-import Runs from "./Runs";
+import Activities from "./Runs";
 import RunningRoutes from "./RunningRoutes";
 import Segments from "./Segments";
 
@@ -19,7 +19,7 @@ class Main extends Component {
                     <ul className="header">
                         <li><NavLink exact to="/">Generate Route</NavLink></li>
                         <li><NavLink to="/routes">Routes</NavLink></li>
-                        <li><NavLink to="/runs">Runs</NavLink></li>
+                        <li><NavLink to="/activities">Activities</NavLink></li>
                         <li><NavLink to="/segments">Segments</NavLink></li>
                     </ul>
                     <div className="content">
@@ -29,7 +29,7 @@ class Main extends Component {
                             title="Generated routes - Where should I go running?" {...props}  />}/>
                         <Route path="/segments" component={props => <Segments
                             title="Segments - Where should I go running?" {...props}  />}/>
-                        <Route path="/runs" component={Runs}/>
+                        <Route path="/activities" component={Activities}/>
                     </div>
                 </div>
             </BrowserRouter>
