@@ -1,7 +1,7 @@
-
 import React, {Component} from "react"
 
 import L from 'leaflet';
+import {NavLink} from "react-router-dom"
 
 import {Map, Polyline, TileLayer} from "react-leaflet"
 
@@ -11,7 +11,8 @@ class Segment extends Component {
         this.state = {
             name: "",
             roads: [],
-            distance: 0
+            distance: 0,
+            efforts: []
         }
     }
 
@@ -25,7 +26,8 @@ class Segment extends Component {
                 id: id,
                 roads: roads.map( rawPoint => [rawPoint["latitude"], rawPoint["longitude"]] ),
                 name: data.name,
-                distance: data.distance
+                distance: data.distance,
+                efforts: data.efforts
             } );
         } )
     }
@@ -40,6 +42,10 @@ class Segment extends Component {
         this.fetchData( this.props.match.params.id );
     }
 
+    formatTime(s) {
+        return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s
+    }
+
     render() {
         return (
             <div>
@@ -51,6 +57,24 @@ class Segment extends Component {
                         <p>
                             {(this.state.distance / 1.6 / 1000).toFixed( 2 )} miles
                         </p>
+                        <div>
+                            <ul>
+                                {this.state.efforts.map(effort => {
+                                    let minutes = (effort.time / 60 | 0);
+                                    return (
+                                        <li key={effort.effortId}>
+                                            <NavLink exact
+                                                     to={`/activities/${effort.activityId}`}>
+                                                {effort.date}
+                                            </NavLink>
+        &nbsp;
+                                            {this.formatTime(effort.time)}
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+
+                        </div>
 
                     </div>
                     <div id="content-wrap">
