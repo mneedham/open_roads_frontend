@@ -55,7 +55,7 @@ class Segments extends Component {
                                         <NavLink exact
                                                  to={`${this.props.match.url}/${segment.id}`}>
                                             {segment.name}
-                                        </NavLink>
+                                        </NavLink> ({segment.runs})
 
                                         <Map
                                             length={4}

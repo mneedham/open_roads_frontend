@@ -60,7 +60,6 @@ class Segment extends Component {
                         <div>
                             <ul>
                                 {this.state.efforts.map(effort => {
-                                    let minutes = (effort.time / 60 | 0);
                                     return (
                                         <li key={effort.effortId}>
                                             <NavLink exact
